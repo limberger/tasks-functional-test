@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -112,6 +113,31 @@ public class TasksTest {
 			// validar mensagem de sucesso
 			String mensagem = driver.findElement(By.id("message")).getText();
 			Assert.assertEquals("Due date must not be in past", mensagem);
+		} finally {
+			// fechar o browser
+			driver.quit();
+		}
+	}
+
+	@Test
+	public void deveRemoverTarefaComSucesso() throws MalformedURLException {
+		WebDriver driver = acessarAplicacao();
+		try {
+			// clicar em ADD Todo
+			driver.findElement(By.id("addTodo")).click();
+			driver.findElement(By.id("task")).sendKeys("Teste via Selenium");
+			driver.findElement(By.id("dueDate")).sendKeys("10/10/2030");
+			driver.findElement(By.id("saveButton")).click();
+			String mensagem = driver.findElement(By.id("message")).getText();
+			Assert.assertEquals("Success!", mensagem);
+			
+			// remover a Tarefa
+			WebElement remover = driver.findElement(By.xpath("//*[@id=\"todoTable\"]/tbody/tr[1]/td[3]/a"));
+			remover.click();
+			mensagem = driver.findElement(By.id("message")).getText();
+			Assert.assertEquals("Success!", mensagem);
+			
+			
 		} finally {
 			// fechar o browser
 			driver.quit();
